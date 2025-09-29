@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/output.css">
+    <!-- Allows TailwindCSS to function in this HTML. Also after
+    generating output.css, we can safely remove node_modules -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <!-- Importing some fonts for designing buttons -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta/dist/vanta.globe.min.js"></script>
+    <!-- Just a cool addition using Vanta.js for animated background -->
+
+    <script src="index.js" defer></script>
+    <!-- Defer makes sure the script is loaded after the HTML is loaded. If you don't use defer, 
+    you will have to put the script tag after the end of body tag -->
+
+    <title>Khriesezo Peseyie</title>
+</head>
+<body class="relative overflow-x-hidden">
+
+  <!-- Vanta.js background container, using bg-black to avoid flashing background when loading the vanta background
+   (it does not actually affect the background of the vanta globe) -->
+  <div id="vanta-bg" class="fixed top-0 left-0 w-full h-full -z-50 bg-black"></div>
+
+  <!-- Backdrop blur effect -->
+  <div class="fixed top-0 left-0 w-full h-full z-10 backdrop-blur-xs pointer-events-none"></div>
+
+  <!-- Beginning of header section -->
+  <header class="flex flex-col z-50 relative sm:flex-row"> 
+  <!-- Purposely avoided using fixed or sticky so that the user can see the full page properly when scrolling -->
+
+    <div class="bg-gradient-to-b from-amber-700 to-amber-900 top-0 left-0 w-full z-50 shadow-inner animate-go-down md:rounded-l-2xl lg:rounded-l-2xl">
+      <div class="flex p-3 max-w-7xl mx-auto text-center">
+        <h1 class="text-white text-3xl font-bold p-2">Khriesezo Peseyie's</h1>
+        <h2 class="text-blue-600 text-2xl font-bold border-2 border-transparent p-2 rounded-4xl bg-gradient-to-tr from-amber-400 to-amber-700 [-webkit-text-stroke:1px_darkblue]">
+          Student Registration System
+        </h2>        
+      </div>
+    </div>
+    <!-- Cool way to have an effect of two separate header sections by applying a section paragraph inside flex container -->
+    <section class="text-white opacity-0 bg-gradient-to-b from-blue-500 to-blue-900 justify-center items-center p-4 mx-auto text-center md:rounded-r-2xl lg:rounded-r-2xl animate-go-down [animation-delay:0.5s]">
+          A Registration System web application designed to record Student data based on the input given by the user.
+          It also enables Data Manipulation such as Adding, Deleting and Updating Student data. This provides
+          the user with a simple and easy to use interface. I hope you enjoy the provisions with a good experience!
+    </section>
+  </header>
+
+  <!-- Beginning of main page -->
+  <main class="flex flex-col sm:flex-row z-50 relative pt-10 gap-6 max-w-screen-xl mx-auto px-4 pb-10">
+    <!-- Data Input Section -->
+    <section class="pt-5 max-w-xl mx-auto p-4 bg-white/10 rounded-xl shadow-lg fade-anim">
+      <!-- Form structure-->
+      <form id="student-form" class="space-y-4">
+        <!-- Title -->
+          <div class="container-title inline-block text-4xl [-webkit-text-stroke:2px_lightgray] font-bold justify-center items-center p-4 mx-auto border-2 rounded-2xl bg-amber-950/10 border-white/10">
+              <h1>Enter the Data Below</h1>
+          </div>
+
+          <!-- Student Name -->
+          <!-- Avoided using "required" property in order to showcase the JavaScript method -->
+          <div>
+              <label for="student-name" class="label-dupe">Student Name</label>
+              <input type="text" id="student-name" placeholder="Name" 
+                    class="input-box">
+          </div>
+
+          <!-- Student ID -->
+          <div>
+              <label for="student-id" class="label-dupe">Student ID (Numeric Only)</label>
+              <input type="number" id="student-id" inputmode="numeric" placeholder="ID Number" 
+                    class="input-box">
+          </div>
+          
+          <!-- Email ID -->
+          <div>
+              <label for="email-id" class="label-dupe">Email ID</label>
+              <input type="email" id="email-id" placeholder="student@email.com" 
+                    class="input-box">
+          </div>
+          
+          <!-- Contact Number -->
+          <div>
+              <label for="contact-no" class="label-dupe">Contact Number (10+ Digits)</label>
+              <div class="flex space-x-2 mb-1">
+                <span class="text-white text-2xl">+</span>
+                <input type="number" id="country-code" placeholder="XXX" class="input-box w-16" max="999" minlength="1" maxlength="3" inputmode="numeric">
+                <span class="text-white text-2xl">-</span>
+                <input type="tel" id="contact-no" placeholder="XXXXX-XXXXX" minlength="10" maxlength="10"
+                      class="input-box">
+              </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button id="button-submit" type="submit" id="add-btn" 
+                  class="w-full py-2 mt-4 bg-gradient-to-br from-amber-600 to-amber-400 hover:bg-amber-700 transition-all hover:scale-105 text-white font-bold rounded-lg duration-200 flex items-center justify-center">
+            Register Student
+          </button>
+      </form>
+    </section>
+
+    <!-- Student List Section -->
+    <section id="studentlist" class="fade-anim md:pl-10 lg:pl-10 w-full sm:flex-1 overflow-x-auto [animation-delay:1.7s]">
+      <div class="min-w-[640px]">
+        <table class="w-full text-left border-collapse bg-white/10 rounded-lg shadow-lg">
+          <!-- Table Header -->
+          <caption id="student-list-title" class="sr-only">Student List</caption>
+          <thead class="bg-amber-700 text-white">
+            <tr>
+              <th class="px-4 py-2 border-b border-white/20">Student Name</th>
+              <th class="px-4 py-2 border-b border-white/20">Student ID</th>
+              <th class="px-4 py-2 border-b border-white/20">Email ID</th>
+              <th class="px-4 py-2 border-b border-white/20">Contact No.</th>
+              <th class="px-4 py-2 border-b border-white/20 text-center">Edits</th>
+            </tr>
+          </thead>
+          <tbody id="student-table-body" class="divide-y divide-white/10 bg-gray-300">
+            <!-- Rows will be added here using JS after inputting data above. Rows will also have white background, making it
+                a distinct focus on the webpage and allowing users to read it more coherently/professionally -->
+
+            <!-- Rows will also start to overflow and begin scrolling once it reaches 11 rows. On smaller devices, it will
+                 be halved so the user doesn't have to scroll too deep -->
+
+            <!-- Rows may be too large for smaller widths, therefore there is an automatic overflow which makes scrolling
+                 horizontally possible.-->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</body>
+
+<!-- vanta script for adjusting-->
+<script>
+  VANTA.GLOBE({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: true,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x3f84ff,    
+        backgroundColor: 0x0d0d0d,
+        color2: 0xd16d6d,
+        size: 0.50,
+      })
+</script>
+</html>
